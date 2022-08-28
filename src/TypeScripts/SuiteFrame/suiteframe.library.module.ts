@@ -3,9 +3,9 @@ import log = require('N/log');
 import query = require('N/query');
 
 export class Library {
-  static appName = '<a href="https://github.com/mattplant/suiteframe-typescript-sdf" target="_blank">SuiteFrame TypeScript SDF Project Template</a>';
-  static appVersion = '0.7.0';
-  static appBuiltWith = 'Built with <a href="https://timdietrich.me/blog/netsuite-suiteframe/" target="_tim">SuiteFrame</a> in <a href="https://github.com/mattplant/netsuite-typescript-sdf/" target="_blank">NetSuite TypeScript SDF Project Template</a>.';
+  static appName = 'NetSuite SuiteFrame Script';
+  static appVersion = '0.1.0';
+  static appBuiltWith = 'Built with <a href="https://github.com/mattplant/NetSuite-SuiteFrame-Script" target="_blank">NetSuite SuiteFrame SDF Project Template</a>.';
   static hideNavBar = false;
   static enableDatatables = true;
 

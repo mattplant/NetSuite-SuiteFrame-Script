@@ -1,5 +1,3 @@
-# NetSuite SuiteFrame SDF Project Template
+# NetSuite Script Customization Inspection Tool
 
-A **NetSuite TypeScript SDF** project template leveraging Timothy Dietrich's **SuiteFrame** framework.
-- For information on the **NetSuite TypeScript SDF project template**, see https://github.com/mattplant/NetSuite-TypeScript-SDF.
-- For information on the **SuiteFrame** framework, see https://timdietrich.me/blog/netsuite-suiteframe/.
+A NetSuite script customization inspection tool built from the [NetSuite SuiteFrame SDF Project Template](https://github.com/mattplant/NetSuite-SuiteFrame-SDF).

@@ -1,6 +1,6 @@
 {
-    "name": "netsuite-suiteframe-sdf",
-    "description": "NetSuite SuiteFrame SDF Project Template",
+    "name": "netsuite-suiteframe-script",
+    "description": "NetSuite script customization inspection tool",
     "keywords": [
         "netsuite",
         "sdf",
@@ -14,9 +14,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/mattplant/netsuite-suiteframe-sdf"
+        "url": "https://github.com/mattplant/netsuite-suiteframe-script"
     },
-    "version": "0.7.0",
+    "version": "0.1.0",
     "license": "MIT",
     "devDependencies": {
         "@hitc/netsuite-types": "^2022.2.3",
