@@ -103,7 +103,7 @@ define(["require", "exports", "N/error", "N/log", "N/record", "N/runtime", "N/ur
             title: 'postRequestHandle - context',
             details: context
         });
-        const requestPayload = context.request.body;
+        const requestPayload = JSON.parse(context.request.body);
         context.response.setHeader('Content-Type', 'application/json');
         if ((typeof requestPayload.function === 'undefined') || (requestPayload.function === null)) {
             context.response.write(JSON.stringify({
