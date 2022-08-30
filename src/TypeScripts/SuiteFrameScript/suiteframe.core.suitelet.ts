@@ -65,12 +65,13 @@
 import { EntryPoints } from 'N/types';
 import error = require('N/error');
 import log = require('N/log');
-import record = require('N/record');
 import runtime = require('N/runtime');
 import url = require('N/url');
 
-import { DetailView } from './employee-directory.ui-detail-view.module';
-import { ListView } from './employee-directory.ui-list-view.module';
+import { DetailView } from './script.ui-detail-view.module';
+import { ListView } from './script.ui-list-view.module';
+// import { MainView } from './script.ui-main-view.module';
+import { NoteView } from './script.ui-note-view.module';
 
 let scriptUrl = '';
 
@@ -97,13 +98,23 @@ export function onRequest(context: EntryPoints.Suitelet.onRequestContext) {
 }
 
 function getRequestHandle(context) {
-	if (typeof context.request.parameters.employeeID === 'undefined') {
-		const listView = new ListView(scriptUrl);
-		listView.generate(context);
-	} else {
-		const detailView = new DetailView(scriptUrl);
-		detailView.generate(context);
-	}
+	// if ( typeof context.request.parameters.scriptId == 'undefined' && typeof context.request.parameters.scriptNoteId == 'undefined' ) {
+	// 	const mainView = new MainView(scriptUrl);
+	// 	mainView.generate(context);
+	// } else {
+		if ( typeof context.request.parameters.scriptId !== 'undefined' ) {
+			const detailView = new DetailView(scriptUrl);
+			detailView.generate(context);
+		} else {
+			if ( typeof context.request.parameters.scriptNoteId !== 'undefined' ) {
+				const noteView = new NoteView(scriptUrl);
+				noteView.generate(context);
+			} else {
+				const listView = new ListView(scriptUrl);
+				listView.generate(context);
+			}
+		}
+	// }
 }
 
 function postRequestHandle(context) {
@@ -123,46 +134,10 @@ function postRequestHandle(context) {
 	}
 
 	switch (requestPayload.function) {
-	case 'employeeNotesUpdate':
-		employeeNotesUpdate(context);
-		break;
 
 	default:
 		context.response.write(JSON.stringify({
 			error: 'An unsupported function was specified.' 
 		}));
-	}
-}
-
-function employeeNotesUpdate(context) {
-	let requestPayload: any;
-	let responsePayload: any;
-
-	try {
-		requestPayload = JSON.parse(context.request.body);
-		record.submitFields({
-			type: record.Type.EMPLOYEE,
-			id: requestPayload.employeeID,
-			values: {
-				comments: requestPayload.comments
-			},
-			options: {
-				enableSourcing: false,
-				ignoreMandatoryFields: true
-			}
-		});
-		responsePayload = {
-			status: 'success' 
-		};
-		log.debug('employeeNotesUpdate - responsePayload', responsePayload);
-		context.response.write(JSON.stringify(responsePayload, null, 5));
-	} catch (e) {
-		log.error('Update Error', {
-			requestPayload,
-			error: e 
-		});
-		responsePayload = {
-			status: 'error' 
-		};
 	}
 }

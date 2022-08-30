@@ -1,30 +1,27 @@
 import serverWidget = require('N/ui/serverWidget')
 import { Library } from './suiteframe.library.module.js';
 
-export class ListView {
+export class MainView {
   constructor(
 			private scriptUrl: string
   ) {
   }
 
   public generate(context) {
-    let html = 'List View';
+    let html = 'Scripts';
 
     const sql = `
 				SELECT					
-					'<a href="${this.scriptUrl}&employeeID=' || ID || '">Details</a>' AS Link,
-					LastName || ', ' || FirstName AS Name,
-					ID,
-					BUILTIN.DF( Department ) AS Department,
-					Title,
-					BUILTIN.DF( Supervisor ) AS Supervisor,
-					'<a href="tel:' || Phone || '">' || Phone || '</a>' AS Phone,
-					'<a href="mailto:' || Email || '">' || Email || '</a>' AS Email			
-				FROM
-					Employee
+          script.isinactive,
+          '<a href="${this.scriptUrl}&scriptId=' || script.id || '">' || script.id || '</a>' AS Link,
+          script.name,
+          script.scripttype
+        FROM
+					script
+				WHERE
+					script.isinactive = 'F'
 				ORDER BY
-					LastName,
-					FirstName
+					script.id
 			`;
     const records = Library.queryExecute(sql);
 
@@ -32,11 +29,11 @@ export class ListView {
       if (typeof context.request.parameters.json !== 'undefined') {
         html = `<pre>${JSON.stringify(records, null, 5)}</pre>`;
       } else {
-        const tableID = 'employeesTable';
+        const tableID = 'recordsTable';
         const table = Library.recordsTableGenerate(records, tableID, true);
         const css = Library.fileLoad('suiteframe.css');
 
-        html = Library.fileLoad('employee-directory.ui-list-view.template.html');
+        html = Library.fileLoad('script.ui-main-view.template.html');
 
         let searchRegExp = new RegExp('{{scriptUrl}}', 'g');
         html = html.replace(searchRegExp, this.scriptUrl);

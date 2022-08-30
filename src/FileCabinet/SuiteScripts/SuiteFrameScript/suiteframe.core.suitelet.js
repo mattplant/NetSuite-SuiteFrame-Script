@@ -61,7 +61,7 @@
  * 20220826 - Matt Plant
  * • Initial SuiteFrame TypeScript SDF Project Template version.
  */
-define(["require", "exports", "N/error", "N/log", "N/record", "N/runtime", "N/url", "./employee-directory.ui-detail-view.module", "./employee-directory.ui-list-view.module"], function (require, exports, error, log, record, runtime, url, employee_directory_ui_detail_view_module_1, employee_directory_ui_list_view_module_1) {
+define(["require", "exports", "N/error", "N/log", "N/runtime", "N/url", "./script.ui-detail-view.module", "./script.ui-list-view.module", "./script.ui-note-view.module"], function (require, exports, error, log, runtime, url, script_ui_detail_view_module_1, script_ui_list_view_module_1, script_ui_note_view_module_1) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.onRequest = void 0;
     let scriptUrl = '';
@@ -89,21 +89,32 @@ define(["require", "exports", "N/error", "N/log", "N/record", "N/runtime", "N/ur
     }
     exports.onRequest = onRequest;
     function getRequestHandle(context) {
-        if (typeof context.request.parameters.employeeID === 'undefined') {
-            const listView = new employee_directory_ui_list_view_module_1.ListView(scriptUrl);
-            listView.generate(context);
-        }
-        else {
-            const detailView = new employee_directory_ui_detail_view_module_1.DetailView(scriptUrl);
+        // if ( typeof context.request.parameters.scriptId == 'undefined' && typeof context.request.parameters.scriptNoteId == 'undefined' ) {
+        // 	const mainView = new MainView(scriptUrl);
+        // 	mainView.generate(context);
+        // } else {
+        if (typeof context.request.parameters.scriptId !== 'undefined') {
+            const detailView = new script_ui_detail_view_module_1.DetailView(scriptUrl);
             detailView.generate(context);
         }
+        else {
+            if (typeof context.request.parameters.scriptNoteId !== 'undefined') {
+                const noteView = new script_ui_note_view_module_1.NoteView(scriptUrl);
+                noteView.generate(context);
+            }
+            else {
+                const listView = new script_ui_list_view_module_1.ListView(scriptUrl);
+                listView.generate(context);
+            }
+        }
+        // }
     }
     function postRequestHandle(context) {
         log.debug({
             title: 'postRequestHandle - context',
             details: context
         });
-        const requestPayload = JSON.parse(context.request.body);
+        const requestPayload = context.request.body;
         context.response.setHeader('Content-Type', 'application/json');
         if ((typeof requestPayload.function === 'undefined') || (requestPayload.function === null)) {
             context.response.write(JSON.stringify({
@@ -112,45 +123,10 @@ define(["require", "exports", "N/error", "N/log", "N/record", "N/runtime", "N/ur
             return;
         }
         switch (requestPayload.function) {
-            case 'employeeNotesUpdate':
-                employeeNotesUpdate(context);
-                break;
             default:
                 context.response.write(JSON.stringify({
                     error: 'An unsupported function was specified.'
                 }));
-        }
-    }
-    function employeeNotesUpdate(context) {
-        let requestPayload;
-        let responsePayload;
-        try {
-            requestPayload = JSON.parse(context.request.body);
-            record.submitFields({
-                type: record.Type.EMPLOYEE,
-                id: requestPayload.employeeID,
-                values: {
-                    comments: requestPayload.comments
-                },
-                options: {
-                    enableSourcing: false,
-                    ignoreMandatoryFields: true
-                }
-            });
-            responsePayload = {
-                status: 'success'
-            };
-            log.debug('employeeNotesUpdate - responsePayload', responsePayload);
-            context.response.write(JSON.stringify(responsePayload, null, 5));
-        }
-        catch (e) {
-            log.error('Update Error', {
-                requestPayload,
-                error: e
-            });
-            responsePayload = {
-                status: 'error'
-            };
         }
     }
 });
